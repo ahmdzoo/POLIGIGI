@@ -18,21 +18,31 @@ class ArticleController extends Controller
     {
         return view('admin.articles.create');
     }
+    
+    public function show($id)
+{
+    $article = \App\Models\Article::findOrFail($id);
+    return view('articles.show', compact('article'));
+}
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'judul' => 'required|string|max:255',
-            'konten' => 'required',
-        ]);
+public function store(Request $request)
+{
+    $request->validate([
+        'judul' => 'required',
+        'konten' => 'required',
+        'image' => 'nullable|image|mimes:jpg,png,jpeg,webp|max:2048',
+    ]);
 
-        Article::create($request->all());
-        return redirect()->route('articles.index')->with('success', 'Artikel berhasil diterbitkan.');
+    $data = $request->all();
+
+    // Logika Simpan Gambar
+    if ($request->hasFile('image')) {
+        $path = $request->file('image')->store('articles', 'public');
+        $data['image'] = $path;
     }
 
-    public function destroy(Article $article)
-    {
-        $article->delete();
-        return redirect()->route('articles.index')->with('success', 'Artikel berhasil dihapus.');
-    }
+    \App\Models\Article::create($data);
+
+    return redirect()->route('articles.index')->with('success', 'Artikel berhasil diterbitkan!');
+}
 }

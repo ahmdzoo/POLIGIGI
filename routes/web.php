@@ -75,6 +75,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/chat', [ChatController::class, 'store'])->name('chat.store');
 });
 
+// Route untuk melihat detail artikel (bisa diakses Pasien & Admin)
+Route::get('/articles/{id}', [App\Http\Controllers\Admin\ArticleController::class, 'show'])->name('articles.show');
 
 
 require __DIR__ . '/auth.php';
