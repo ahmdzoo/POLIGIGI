@@ -29,9 +29,13 @@ class RegistrationController extends Controller
         // 1. Ambil data jadwal untuk tahu jam mulai dokter
         $schedule = \App\Models\Schedule::findOrFail($request->schedule_id);
 
-        // 2. Hitung nomor antrean otomatis
+        // FIX: Ubah format tanggal dari DD/MM/YYYY (02/04/2026) menjadi YYYY-MM-DD (2026-04-02)
+        // Ini sangat penting agar MySQL tidak menolak inputan tanggal Anda
+        $tanggalDatabase = \Carbon\Carbon::createFromFormat('d/m/Y', $request->tgl_pendaftaran)->format('Y-m-d');
+
+        // 2. Hitung nomor antrean otomatis berdasarkan tanggal yang sudah di-fix
         $lastAntrean = \App\Models\Registration::where('schedule_id', $request->schedule_id)
-            ->where('tgl_pendaftaran', $request->tgl_pendaftaran)
+            ->where('tgl_pendaftaran', $tanggalDatabase)
             ->max('no_antrean');
 
         $noAntrean = $lastAntrean ? $lastAntrean + 1 : 1;
@@ -42,10 +46,10 @@ class RegistrationController extends Controller
         // 4. Hitung Jam Selesai (Jam Mulai + 30 Menit)
         $jamSelesai = $jamMulai->copy()->addMinutes(30);
 
-        // 5. GABUNGKAN menjadi format rentang (Definisikan variabel ini)
+        // 5. GABUNGKAN menjadi format rentang (Contoh: 16:00 - 16:30)
         $rentangWaktu = $jamMulai->format('H:i') . ' - ' . $jamSelesai->format('H:i');
 
-        // 6. Simpan semua data ke database
+        // 6. Simpan semua data ke database dengan format tanggal yang benar
         \App\Models\Registration::create([
             'user_id' => Auth::id(),
             'schedule_id' => $request->schedule_id,
@@ -56,12 +60,13 @@ class RegistrationController extends Controller
             'keluhan' => $request->keluhan,
             'jenis_perawatan' => $request->jenis_perawatan,
             'metode_pembayaran' => $request->metode_pembayaran,
-            'tgl_pendaftaran' => $request->tgl_pendaftaran,
+            'tgl_pendaftaran' => $tanggalDatabase, // Disimpan dalam format YYYY-MM-DD
             'no_antrean' => $noAntrean,
-            'estimasi_jam' => $rentangWaktu, // Variabel sekarang sudah ada
+            'estimasi_jam' => $rentangWaktu,
             'status' => 'menunggu',
         ]);
 
+        // Redirect kembali ke riwayat kunjungan dengan pesan sukses
         return redirect()->route('pasien.registrations.index')
             ->with('success', 'Pendaftaran Berhasil! Jadwal Anda: ' . $rentangWaktu . ' WIB');
     }
