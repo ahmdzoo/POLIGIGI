@@ -4,7 +4,7 @@
         <div class="w-full lg:w-5/12 flex flex-col justify-center px-12 md:px-20 bg-white z-20">
             <div class="max-w-md w-full mx-auto lg:mx-0">
                 <div class="mb-10">
-                    <x-application-logo class="w-16 h-16 fill-current text-orange-600 mb-4" />
+                    <x-application-logo class="w-24 h-24 fill-current text-orange-600 mb-4" />
                     <h2 class="text-5xl font-black text-gray-800 italic uppercase tracking-tighter leading-none mb-2">
                         SELAMAT<br>DATANG
                     </h2>

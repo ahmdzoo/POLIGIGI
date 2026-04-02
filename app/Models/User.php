@@ -63,4 +63,9 @@ class User extends Authenticatable
         // User memiliki banyak (hasMany) data pendaftaran
         return $this->hasMany(Registration::class);
     }
+
+    public function favoriteArticles()
+    {
+        return $this->belongsToMany(Article::class, 'article_favorites');
+    }
 }

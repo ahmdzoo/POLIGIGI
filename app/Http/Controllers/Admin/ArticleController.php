@@ -45,4 +45,19 @@ public function store(Request $request)
 
     return redirect()->route('articles.index')->with('success', 'Artikel berhasil diterbitkan!');
 }
+
+    public function toggleFavorite(Article $article)
+    {
+        $user = auth()->user();
+
+        // Jika sudah difavoritkan, hapus. Jika belum, tambahkan.
+        if ($user->favoriteArticles()->where('article_id', $article->id)->exists()) {
+            $user->favoriteArticles()->detach($article->id);
+        } else {
+            $user->favoriteArticles()->attach($article->id);
+        }
+
+        return back();
+    }
+    
 }

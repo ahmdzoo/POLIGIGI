@@ -64,7 +64,7 @@
                 </main>
 
                 <footer class="py-8 text-center text-[10px] text-gray-400 uppercase tracking-[0.2em] font-bold">
-                    &copy; {{ date('Y') }} Klinik Paoman - Sistem Informasi Poli Gigi
+                    &copy; {{ date('Y') }} Klinik Paoman - Aplikasi Pendaftaran Online untuk meningkatkan efiensi pelayanan poli gigi di klinik paoman
                 </footer>
             </div>
         </div>

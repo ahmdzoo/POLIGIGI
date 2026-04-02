@@ -63,26 +63,54 @@
                                 </select>
                             </div>
 
-                            <div>
-                                <label class="block text-xs font-black text-gray-500 uppercase tracking-wider mb-1">Tanggal Periksa</label>
-                                <input type="date" name="tgl_pendaftaran" class="w-full border-orange-200 rounded-xl p-3 focus:ring-orange-500 focus:border-orange-500 bg-orange-50/20 shadow-sm" min="{{ date('Y-m-d') }}" required>
-                            </div>
+                            <div class="mb-6">
+    <label class="block text-[10px] font-black text-gray-500 uppercase tracking-[0.2em] mb-2 bold">
+        Tanggal Periksa 
+    </label>
+    <div class="relative group">
+        <input 
+            type="text" {{-- Kita ganti ke text agar format tanggal 02/04/2026 terlihat rapi seperti di gambar --}}
+            name="tgl_pendaftaran" 
+            value="{{ date('d/m/Y') }}" 
+            readonly 
+            {{-- Class border-orange-200 dan rounded-2xl disamakan dengan inputan lain --}}
+            class="w-full border-2 border-orange-200 rounded-2xl p-4 bg-orange-50/20 text-gray-700 font-bold shadow-sm cursor-not-allowed focus:ring-0 focus:border-orange-200 transition-all appearance-none"
+            required
+        >
+        {{-- Ikon kalender untuk menjaga keseimbangan visual --}}
+        <div class="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none text-orange-400">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+        </div>
+    </div>
+    <p class="mt-2 text-[9px] text-orange-500 font-black italic uppercase tracking-widest">
+        * Pendaftaran hanya berlaku untuk hari ini
+    </p>
+</div>
 
                             <div class="grid grid-cols-2 gap-4">
                                 <div>
                                     <label class="block text-xs font-black text-gray-500 uppercase tracking-wider mb-1">Jenis Perawatan</label>
                                     <select name="jenis_perawatan" class="w-full border-orange-200 rounded-xl p-3 focus:ring-orange-500 focus:border-orange-500 bg-orange-50/20" required>
-                                        <option value="Pemeriksaan Rutin">Pemeriksaan Rutin</option>
-                                        <option value="Cabut Gigi">Cabut Gigi</option>
+                                        <option value="Check Up">Check Up</option>
+                                        <option value="Scalling">Scalling</option>
                                         <option value="Tambal Gigi">Tambal Gigi</option>
-                                        <option value="Scaling">Scaling</option>
+                                        <option value="Cabut Gigi">Cabut Gigi</option>
+                                        <option value="Perawatan Saluran Akar">Perawatan Saluran Akar</option>
+                                        <option value="Pasang Behel">Pasang Behel</option>
+                                        <option value="Veneer Gigi">Veneer Gigi</option>
+                                        <option value="Bleaching Gigi">Bleaching Gigi</option>
+                                        <option value="Implan Gigi">Implan Gigi</option>
+                                        <option value="Perawatan Gusi">Perawatan Gusi</option>
                                     </select>
                                 </div>
                                 <div>
                                     <label class="block text-xs font-black text-gray-500 uppercase tracking-wider mb-1">Pembayaran</label>
                                     <select name="metode_pembayaran" class="w-full border-orange-200 rounded-xl p-3 focus:ring-orange-500 focus:border-orange-500 bg-orange-50/20" required>
-                                        <option value="Tunai">Tunai</option>
+                                        <option value="UMUM">UMUM</option>
                                         <option value="BPJS">BPJS</option>
+                                        <option value="ASURANSI">ASURANSI</option>
                                     </select>
                                 </div>
                             </div>

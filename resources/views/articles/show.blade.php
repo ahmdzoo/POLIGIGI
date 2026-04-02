@@ -36,9 +36,7 @@
 
                     <div class="mt-12 pt-8 border-t border-orange-100 flex justify-between items-center">
                         <p class="text-xs text-gray-400 italic">Semoga informasi ini bermanfaat bagi Anda!</p>
-                        <a href="{{ route('pasien.registrations.create') }}" class="bg-orange-500 text-white px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest shadow-lg shadow-orange-200">
-                            Daftar Praktek Sekarang →
-                        </a>
+                        
                     </div>
                 </div>
             </div>

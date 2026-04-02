@@ -78,5 +78,6 @@ Route::middleware(['auth'])->group(function () {
 // Route untuk melihat detail artikel (bisa diakses Pasien & Admin)
 Route::get('/articles/{id}', [App\Http\Controllers\Admin\ArticleController::class, 'show'])->name('articles.show');
 
+Route::post('/articles/{article}/favorite', [ArticleController::class, 'toggleFavorite'])->name('articles.favorite');
 
 require __DIR__ . '/auth.php';
