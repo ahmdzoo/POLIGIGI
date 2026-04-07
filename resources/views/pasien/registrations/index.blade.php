@@ -71,10 +71,20 @@
                                 </td>
 
                                 <td class="px-4 py-5 text-center rounded-r-2xl border-y border-r border-gray-100">
-                                    <span class="px-5 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest shadow-sm bg-green-100 text-green-600 border border-green-200">
-                                        Selesai
-                                    </span>
-                                </td>
+    @if($reg->status == 'selesai')
+        <span class="px-5 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest shadow-sm bg-green-100 text-green-600 border border-green-200">
+            Selesai
+        </span>
+    @elseif($reg->status == 'menunggu')
+        <span class="px-5 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest shadow-sm bg-amber-100 text-amber-600 border border-amber-200">
+            Menunggu
+        </span>
+    @else
+        <span class="px-5 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest shadow-sm bg-gray-100 text-gray-600 border border-gray-200">
+            {{ $reg->status }}
+        </span>
+    @endif
+</td>
                             </tr>
                             @empty
                             <tr>
