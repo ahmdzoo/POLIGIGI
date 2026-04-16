@@ -1,4 +1,4 @@
-<nav class="fixed left-0 top-0 h-screen bg-white border-r border-orange-100 transition-all duration-300 z-50 shadow-2xl overflow-y-auto overflow-x-hidden flex flex-col" 
+<nav x-data="{ open: true, showLogoutModal: false }" class="fixed left-0 top-0 h-screen bg-white border-r border-orange-100 transition-all duration-300 z-50 shadow-2xl overflow-y-auto overflow-x-hidden flex flex-col" 
      :class="open ? 'w-64' : 'w-20'">
     
     <div class="p-4 flex items-center justify-between border-b border-orange-50 bg-white sticky top-0 z-10 h-16">
@@ -95,22 +95,20 @@
     </div>
 
     <div class="p-2 border-t border-orange-50 bg-orange-50/30 space-y-1">
-    <a href="{{ route('profile.edit') }}" 
-       class="sidebar-link-small {{ request()->routeIs('profile.*') ? 'active-link' : '' }}" 
-       :class="open ? 'px-3 justify-start' : 'justify-center'">
-        <div class="icon-box-small shrink-0">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-            </svg>
-        </div>
-        <span x-show="open" class="ml-3 font-bold text-[10px] uppercase italic truncate flex-1 tracking-tighter">
-            {{ Auth::user()->name }}
-        </span>
-    </a>
+        <a href="{{ route('profile.edit') }}" 
+           class="sidebar-link-small {{ request()->routeIs('profile.*') ? 'active-link' : '' }}" 
+           :class="open ? 'px-3 justify-start' : 'justify-center'">
+            <div class="icon-box-small shrink-0">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                </svg>
+            </div>
+            <span x-show="open" class="ml-3 font-bold text-[10px] uppercase italic truncate flex-1 tracking-tighter">
+                {{ Auth::user()->name }}
+            </span>
+        </a>
 
-    <form method="POST" action="{{ route('logout') }}">
-        @csrf
-        <button type="submit" class="sidebar-link-small w-full text-red-500 hover:bg-red-50 border-none outline-none flex" :class="open ? 'px-3 justify-start' : 'justify-center'">
+        <button @click="showLogoutModal = true" type="button" class="sidebar-link-small w-full text-red-500 hover:bg-red-50 border-none outline-none flex" :class="open ? 'px-3 justify-start' : 'justify-center'">
             <div class="icon-box-small shrink-0">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
@@ -118,8 +116,38 @@
             </div>
             <span x-show="open" class="ml-3 font-black text-[10px] uppercase italic">Logout</span>
         </button>
-    </form>
-</div>
+    </div>
+
+    <template x-teleport="body">
+        <div x-show="showLogoutModal" 
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0"
+             x-transition:enter-end="opacity-100"
+             x-transition:leave="transition ease-in duration-200"
+             x-transition:leave-start="opacity-100"
+             x-transition:leave-end="opacity-0"
+             class="fixed inset-0 z-[999] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
+            
+            <div @click.away="showLogoutModal = false" class="bg-white w-full max-w-sm rounded-[2.5rem] shadow-2xl border border-orange-100 p-8 relative overflow-hidden">
+                <div class="relative z-10 text-center">
+                    <div class="w-16 h-16 bg-red-50 rounded-2xl flex items-center justify-center mx-auto mb-4 text-red-500">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-black text-gray-800 uppercase italic tracking-tighter">Konfirmasi Keluar</h3>
+                    <p class="text-[10px] text-gray-400 font-bold uppercase mt-2 italic">Apakah Anda yakin ingin mengakhiri sesi di Klinik Paoman?</p>
+                    <div class="flex flex-col gap-2 mt-6">
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="w-full py-3 bg-orange-500 hover:bg-orange-600 text-white font-black text-[10px] uppercase tracking-widest rounded-xl shadow-lg transition-all italic">Ya, Keluar Sekarang</button>
+                        </form>
+                        <button @click="showLogoutModal = false" class="w-full py-3 bg-gray-50 text-gray-400 font-black text-[10px] uppercase tracking-widest rounded-xl hover:bg-gray-100 transition-all italic">Batal</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
 </nav>
 
 <style>
@@ -132,7 +160,6 @@
         text-decoration: none !important;
         height: 3.5rem;
     }
-    /* Link Versi Ramping (Untuk Profil & Logout) */
     .sidebar-link-small {
         display: flex;
         align-items: center;
@@ -140,25 +167,21 @@
         color: #4b5563;
         transition: all 0.3s ease;
         text-decoration: none !important;
-        height: 2.75rem; /* Tinggi dikurangi dari 3.5rem */
+        height: 2.75rem;
     }
-
-    /* Kotak Ikon Versi Kecil */
     .icon-box-small {
-        width: 2.25rem;  /* Lebih mungil */
-        height: 2.25rem; /* Lebih mungil */
+        width: 2.25rem;
+        height: 2.25rem;
         display: flex;
         align-items: center;
         justify-content: center;
         border-radius: 0.6rem;
         transition: all 0.3s ease;
     }
-
     .active-link .icon-box-small {
         background-color: #f97316 !important;
         color: white !important;
     }
-
     .active-link span { color: #f97316 !important; }
     .icon-box {
         width: 3rem;
@@ -174,7 +197,6 @@
         color: white !important;
         box-shadow: 0 4px 12px rgba(249, 115, 22, 0.4);
     }
-    .active-link span { color: #f97316 !important; }
     .sidebar-link:hover:not(.active-link) .icon-box { background-color: #fff7ed; color: #f97316; }
     .custom-scrollbar::-webkit-scrollbar { width: 4px; }
     .custom-scrollbar::-webkit-scrollbar-thumb { background: #fed7aa; border-radius: 10px; }

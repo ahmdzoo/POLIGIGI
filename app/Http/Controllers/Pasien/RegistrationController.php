@@ -7,50 +7,68 @@ use App\Models\Registration;
 use App\Models\Schedule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class RegistrationController extends Controller
 {
-    public function index()
+    /**
+     * Menampilkan riwayat kunjungan dengan fitur Filter.
+     */
+    public function index(Request $request)
     {
-        // Melihat riwayat kunjungan pasien yang sedang login
-        $registrations = Registration::where('user_id', Auth::id())->with('schedule.doctor')->latest()->get();
+        // 1. Inisialisasi query dasar berdasarkan ID user yang login
+        $query = Registration::where('user_id', Auth::id())
+            ->with('schedule.doctor');
+
+        // 2. LOGIKA FILTER: Hanya jalan jika inputan diisi
+
+        // Filter Jenis Perawatan (Layanan)
+        if ($request->filled('jenis_perawatan')) {
+            $query->where('jenis_perawatan', $request->jenis_perawatan);
+        }
+
+        // Filter Rentang Tanggal Awal
+        if ($request->filled('start_date')) {
+            $query->whereDate('tgl_pendaftaran', '>=', $request->start_date);
+        }
+
+        // Filter Rentang Tanggal Akhir
+        if ($request->filled('end_date')) {
+            $query->whereDate('tgl_pendaftaran', '<=', $request->end_date);
+        }
+
+        // 3. Eksekusi query dengan urutan terbaru
+        $registrations = $query->latest('tgl_pendaftaran')->get();
+
         return view('pasien.registrations.index', compact('registrations'));
     }
 
     public function create()
     {
-        // Menampilkan jadwal yang tersedia untuk dipilih
         $schedules = Schedule::with('doctor')->get();
         return view('pasien.registrations.create', compact('schedules'));
     }
 
     public function store(Request $request)
     {
-        // 1. Ambil data jadwal untuk tahu jam mulai dokter
-        $schedule = \App\Models\Schedule::findOrFail($request->schedule_id);
+        $schedule = Schedule::findOrFail($request->schedule_id);
 
-        // FIX: Ubah format tanggal dari DD/MM/YYYY (02/04/2026) menjadi YYYY-MM-DD (2026-04-02)
-        // Ini sangat penting agar MySQL tidak menolak inputan tanggal Anda
-        $tanggalDatabase = \Carbon\Carbon::createFromFormat('d/m/Y', $request->tgl_pendaftaran)->format('Y-m-d');
+        // Konversi format tanggal agar diterima MySQL
+        $tanggalDatabase = Carbon::createFromFormat('d/m/Y', $request->tgl_pendaftaran)->format('Y-m-d');
 
-        // 2. Hitung nomor antrean otomatis berdasarkan tanggal yang sudah di-fix
-        $lastAntrean = \App\Models\Registration::where('schedule_id', $request->schedule_id)
+        // Hitung nomor antrean
+        $lastAntrean = Registration::where('schedule_id', $request->schedule_id)
             ->where('tgl_pendaftaran', $tanggalDatabase)
             ->max('no_antrean');
 
         $noAntrean = $lastAntrean ? $lastAntrean + 1 : 1;
 
-        // 3. Hitung Jam Mulai (Carbon otomatis menangani format H:i:s)
-        $jamMulai = \Carbon\Carbon::createFromFormat('H:i:s', $schedule->jam_mulai)->addMinutes(($noAntrean - 1) * 30);
-
-        // 4. Hitung Jam Selesai (Jam Mulai + 30 Menit)
+        // Hitung Estimasi Jam (Slot 30 menit)
+        $jamMulai = Carbon::createFromFormat('H:i:s', $schedule->jam_mulai)->addMinutes(($noAntrean - 1) * 30);
         $jamSelesai = $jamMulai->copy()->addMinutes(30);
-
-        // 5. GABUNGKAN menjadi format rentang (Contoh: 16:00 - 16:30)
         $rentangWaktu = $jamMulai->format('H:i') . ' - ' . $jamSelesai->format('H:i');
 
-        // 6. Simpan semua data ke database dengan format tanggal yang benar
-        \App\Models\Registration::create([
+        Registration::create([
             'user_id' => Auth::id(),
             'schedule_id' => $request->schedule_id,
             'no_hp' => $request->no_hp,
@@ -60,15 +78,15 @@ class RegistrationController extends Controller
             'keluhan' => $request->keluhan,
             'jenis_perawatan' => $request->jenis_perawatan,
             'metode_pembayaran' => $request->metode_pembayaran,
-            'tgl_pendaftaran' => $tanggalDatabase, // Disimpan dalam format YYYY-MM-DD
+            'tgl_pendaftaran' => $tanggalDatabase,
             'no_antrean' => $noAntrean,
             'estimasi_jam' => $rentangWaktu,
             'status' => 'menunggu',
         ]);
 
-        // Redirect kembali ke riwayat kunjungan dengan pesan sukses
-        return redirect()->route('pasien.registrations.index')
-            ->with('success', 'Pendaftaran Berhasil! Jadwal Anda: ' . $rentangWaktu . ' WIB');
+        // DIUBAH: Diarahkan ke dashboard dengan pesan sukses
+        return redirect()->route('dashboard')
+            ->with('success', 'Pendaftaran Berhasil! Nomor Antrean Anda adalah #' . $noAntrean . ' (' . $rentangWaktu . ' WIB)');
     }
 
     public function updateStatus(Request $request, $id)

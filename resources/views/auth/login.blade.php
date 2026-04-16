@@ -76,4 +76,39 @@
             </div>
         </div>
     </div>
+    @if(session('success_register'))
+<div x-data="{ showModal: true }">
+    <template x-teleport="body">
+        <div x-show="showModal" 
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0"
+             x-transition:enter-end="opacity-100"
+             class="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+            
+            <div @click.away="showModal = false" 
+                 class="bg-white w-full max-w-sm rounded-[2.5rem] shadow-2xl border border-orange-100 p-8 text-center relative overflow-hidden">
+                
+                <div class="absolute -top-10 -right-10 w-32 h-32 bg-orange-50 rounded-full blur-3xl"></div>
+
+                <div class="relative z-10">
+                    <div class="w-20 h-20 bg-green-100 rounded-3xl flex items-center justify-center mx-auto mb-6 text-green-600 shadow-inner">
+                        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                    </div>
+
+                    <h3 class="text-xl font-black text-gray-800 uppercase italic tracking-tighter">Registrasi Berhasil!</h3>
+                    <p class="text-[11px] text-gray-400 font-bold uppercase mt-2 leading-relaxed">
+                        {{ session('success_register') }}
+                    </p>
+
+                    <button @click="showModal = false" class="w-full mt-8 py-4 bg-orange-500 hover:bg-orange-600 text-white font-black text-[11px] uppercase tracking-widest rounded-2xl shadow-xl shadow-orange-100 transition-all active:scale-95 italic">
+                        LOGIN SEKARANG
+                    </button>
+                </div>
+            </div>
+        </div>
+    </template>
+</div>
+@endif
 </x-guest-layout>

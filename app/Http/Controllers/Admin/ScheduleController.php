@@ -42,4 +42,24 @@ class ScheduleController extends Controller
 
         return redirect()->route('schedules.index')->with('success', 'Jadwal berhasil dibuat.');
     }
+
+    public function edit(Schedule $schedule)
+{
+    $doctors = Doctor::all(); // Mengambil data dokter untuk dropdown
+    return view('admin.schedules.edit', compact('schedule', 'doctors'));    
+}
+
+    public function update(Request $request, Schedule $schedule)
+    {
+        $request->validate([
+            'doctor_id' => 'required',
+            'hari' => 'required|string', // Ubah menjadi string agar bisa menampung "s.d."
+            'jam_mulai' => 'required',
+            'jam_selesai' => 'required',
+        ]);
+
+        $schedule->update($request->all());
+
+        return redirect()->route('schedules.index')->with('success', 'Jadwal praktik berhasil diperbarui!');
+    }
 }

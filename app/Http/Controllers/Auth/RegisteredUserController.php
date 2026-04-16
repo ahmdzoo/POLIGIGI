@@ -27,27 +27,29 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request): RedirectResponse
-    {
-        $request->validate([
-            'nik' => ['required', 'string', 'max:16', 'unique:'.User::class],
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ]);
+   public function store(Request $request): RedirectResponse
+{
+    $request->validate([
+        'nik' => ['required', 'string', 'max:16', 'unique:'.User::class],
+        'name' => ['required', 'string', 'max:255'],
+        'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+        'password' => ['required', 'confirmed', \Illuminate\Validation\Rules\Password::defaults()],
+    ]);
 
-        $user = User::create([
-            'nik' => $request->nik,
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'role' => 'pasien',
-        ]);
+    $user = User::create([
+        'nik' => $request->nik,
+        'name' => $request->name,
+        'email' => $request->email,
+        'password' => Hash::make($request->password),
+        'role' => 'pasien',
+    ]);
 
-        event(new Registered($user));
+    event(new Registered($user));
 
-        Auth::login($user);
+    // JANGAN LOGIN OTOMATIS
+    // Auth::login($user); 
 
-        return redirect(route('dashboard', absolute: false));
-    }
+    // Arahkan ke login dengan membawa pesan
+    return redirect()->route('login')->with('success_register', 'Akun berhasil dibuat! Silakan masuk menggunakan email dan password Anda.');
+}
 }

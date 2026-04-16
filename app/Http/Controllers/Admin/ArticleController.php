@@ -59,5 +59,35 @@ public function store(Request $request)
 
         return back();
     }
+
+    // Menampilkan form edit
+    public function edit(\App\Models\Article $article)
+    {
+        return view('admin.articles.edit', compact('article'));
+    }
+
+    // Menyimpan perubahan
+    public function update(Request $request, \App\Models\Article $article)
+    {
+        $request->validate([
+            'judul' => 'required|string|max:255',
+            'konten' => 'required',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+        ]);
+
+        $data = $request->only(['judul', 'konten']);
+
+        if ($request->hasFile('image')) {
+            // Hapus gambar lama jika ada
+            if ($article->image) {
+                \Storage::disk('public')->delete($article->image);
+            }
+            $data['image'] = $request->file('image')->store('articles', 'public');
+        }
+
+        $article->update($data);
+
+        return redirect()->route('articles.index')->with('success', 'Artikel berhasil diperbarui!');
+    }
     
 }
