@@ -16,28 +16,25 @@ class RegistrationController extends Controller
      */
     public function index(Request $request)
     {
-        // 1. Inisialisasi query dasar berdasarkan ID user yang login
         $query = Registration::where('user_id', Auth::id())
             ->with('schedule.doctor');
 
-        // 2. LOGIKA FILTER: Hanya jalan jika inputan diisi
-
-        // Filter Jenis Perawatan (Layanan)
+        // 1. Filter Jenis Perawatan (Layanan)
         if ($request->filled('jenis_perawatan')) {
             $query->where('jenis_perawatan', $request->jenis_perawatan);
         }
 
-        // Filter Rentang Tanggal Awal
-        if ($request->filled('start_date')) {
-            $query->whereDate('tgl_pendaftaran', '>=', $request->start_date);
+        // 2. Filter Berdasarkan Rentang Hari (Termasuk 1 Hari)
+        if ($request->filled('rentang_hari')) {
+            $hari = intval($request->rentang_hari);
+
+            // Menghitung tanggal batas (Hari ini dikurangi X hari)
+            $tanggalBatas = \Carbon\Carbon::now()->subDays($hari)->toDateString();
+
+            // Ambil data dari tanggal batas sampai hari ini
+            $query->whereDate('tgl_pendaftaran', '>=', $tanggalBatas);
         }
 
-        // Filter Rentang Tanggal Akhir
-        if ($request->filled('end_date')) {
-            $query->whereDate('tgl_pendaftaran', '<=', $request->end_date);
-        }
-
-        // 3. Eksekusi query dengan urutan terbaru
         $registrations = $query->latest('tgl_pendaftaran')->get();
 
         return view('pasien.registrations.index', compact('registrations'));

@@ -26,41 +26,43 @@
                     </div>
 
                     <form action="{{ route('pasien.registrations.index') }}" method="GET" class="grid grid-cols-1 md:grid-cols-4 gap-4 bg-orange-50/50 p-5 rounded-[2rem] border border-orange-100/50">
-                        <div>
-                            <select name="jenis_perawatan" class="w-full border-none bg-white rounded-xl px-4 py-2.5 text-[11px] font-bold italic shadow-sm focus:ring-2 focus:ring-orange-500 text-gray-600 uppercase tracking-tighter">
-                                <option value="">Semua Layanan</option>
-                                <option value="Check Up" {{ request('jenis_perawatan') == 'Check Up' ? 'selected' : '' }}>Check Up</option>
-                                <option value="Scalling" {{ request('jenis_perawatan') == 'Scalling' ? 'selected' : '' }}>Scalling</option>
-                                <option value="Tambal Gigi" {{ request('jenis_perawatan') == 'Tambal Gigi' ? 'selected' : '' }}>Tambal Gigi</option>
-                                <option value="Cabut Gigi" {{ request('jenis_perawatan') == 'Cabut Gigi' ? 'selected' : '' }}>Cabut Gigi</option>
-                                <option value="Perawatan Saluran Akar" {{ request('jenis_perawatan') == 'Perawatan Saluran Akar' ? 'selected' : '' }}>Perawatan Saluran Akar</option>
-                                <option value="Pasang Behel" {{ request('jenis_perawatan') == 'Pasang Behel' ? 'selected' : '' }}>Pasang Behel</option>
-                                <option value="Veneer Gigi" {{ request('jenis_perawatan') == 'Veneer Gigi' ? 'selected' : '' }}>Veneer Gigi</option>
-                                <option value="Bleaching Gigi" {{ request('jenis_perawatan') == 'Bleaching Gigi' ? 'selected' : '' }}>Bleaching Gigi</option>
-                                <option value="Implan Gigi" {{ request('jenis_perawatan') == 'Implan Gigi' ? 'selected' : '' }}>Implan Gigi</option>
-                                <option value="Perawatan Gusi" {{ request('jenis_perawatan') == 'Perawatan Gusi' ? 'selected' : '' }}>Perawatan Gusi</option>
-                            </select>
-                        </div>
+    
+    <div>
+        <select name="jenis_perawatan" class="w-full border-none bg-white rounded-xl px-4 py-2.5 text-[11px] font-bold italic shadow-sm focus:ring-2 focus:ring-orange-500 text-gray-600 uppercase">
+            <option value="">Semua Layanan</option>
+            <option value="Check Up" {{ request('jenis_perawatan') == 'Check Up' ? 'selected' : '' }}>Check Up</option>
+            <option value="Scalling" {{ request('jenis_perawatan') == 'Scalling' ? 'selected' : '' }}>Scalling</option>
+            <option value="Tambal Gigi" {{ request('jenis_perawatan') == 'Tambal Gigi' ? 'selected' : '' }}>Tambal Gigi</option>
+            <option value="Cabut Gigi" {{ request('jenis_perawatan') == 'Cabut Gigi' ? 'selected' : '' }}>Cabut Gigi</option>
+            <option value="Perawatan Saluran Akar" {{ request('jenis_perawatan') == 'Perawatan Saluran Akar' ? 'selected' : '' }}>Perawatan Saluran Akar</option>
+            <option value="Pasang Behel" {{ request('jenis_perawatan') == 'Pasang Behel' ? 'selected' : '' }}>Pasang Behel</option>
+            <option value="Veneer Gigi" {{ request('jenis_perawatan') == 'Veneer Gigi' ? 'selected' : '' }}>Veneer Gigi</option>
+            <option value="Bleaching Gigi" {{ request('jenis_perawatan') == 'Bleaching Gigi' ? 'selected' : '' }}>Bleaching Gigi</option>
+            <option value="Implan Gigi" {{ request('jenis_perawatan') == 'Implan Gigi' ? 'selected' : '' }}>Implan Gigi</option>
+            <option value="Perawatan Gusi" {{ request('jenis_perawatan') == 'Perawatan Gusi' ? 'selected' : '' }}>Perawatan Gusi</option>
+        </select>
+    </div>
 
-                        <div>
-                            <input type="date" name="start_date" value="{{ request('start_date') }}" 
-                                class="w-full border-none bg-white rounded-xl px-4 py-2.5 text-[11px] font-bold italic shadow-sm focus:ring-2 focus:ring-orange-500 text-gray-600">
-                        </div>
+    <div class="md:col-span-2">
+        <select name="rentang_hari" class="w-full border-none bg-white rounded-xl px-4 py-2.5 text-[11px] font-bold italic shadow-sm focus:ring-2 focus:ring-orange-500 text-gray-600 uppercase">
+            <option value="">Semua Waktu (Tampilkan Semua)</option>
+            <option value="1" {{ request('rentang_hari') == '1' ? 'selected' : '' }}>Hari Ini (1 Hari Terakhir)</option>
+            <option value="7" {{ request('rentang_hari') == '7' ? 'selected' : '' }}>7 Hari Terakhir</option>
+            <option value="30" {{ request('rentang_hari') == '30' ? 'selected' : '' }}>30 Hari Terakhir</option>
+            <option value="90" {{ request('rentang_hari') == '90' ? 'selected' : '' }}>3 Bulan Terakhir (90 Hari)</option>
+            <option value="365" {{ request('rentang_hari') == '365' ? 'selected' : '' }}>1 Tahun Terakhir</option>
+        </select>
+    </div>
 
-                        <div>
-                            <input type="date" name="end_date" value="{{ request('end_date') }}" 
-                                class="w-full border-none bg-white rounded-xl px-4 py-2.5 text-[11px] font-bold italic shadow-sm focus:ring-2 focus:ring-orange-500 text-gray-600">
-                        </div>
-
-                        <div class="flex gap-2">
-                            <button type="submit" class="flex-1 bg-gray-800 hover:bg-black text-white px-4 py-2.5 rounded-xl font-black text-[10px] uppercase italic transition-all shadow-md active:scale-95">
-                                Cari Riwayat
-                            </button>
-                            <a href="{{ route('pasien.registrations.index') }}" class="bg-orange-100 text-orange-600 px-3 py-2.5 rounded-xl hover:bg-orange-200 transition-all flex items-center justify-center shadow-sm" title="Reset Filter">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
-                            </a>
-                        </div>
-                    </form>
+    <div class="flex gap-2">
+        <button type="submit" class="flex-1 bg-gray-800 hover:bg-black text-white px-4 py-2.5 rounded-xl font-black text-[10px] uppercase italic transition-all shadow-md">
+            Cari Riwayat
+        </button>
+        <a href="{{ route('pasien.registrations.index') }}" class="bg-orange-100 text-orange-600 px-3 py-2.5 rounded-xl hover:bg-orange-200 transition-all flex items-center justify-center">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+        </a>
+    </div>
+</form>
                 </div>
 
                 @if(session('success'))

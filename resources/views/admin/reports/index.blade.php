@@ -32,41 +32,51 @@
 
             <div class="bg-white p-8 rounded-[2.5rem] shadow-2xl border border-orange-100 mb-8">
                 <form action="{{ route('reports.index') }}" method="GET">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                        <div>
-                            <label class="block text-[10px] font-black text-orange-500 uppercase tracking-[0.2em] mb-3 ml-1 italic">Rentang Awal</label>
-                            <input type="date" name="start_date" value="{{ request('start_date') }}" class="w-full border-2 border-orange-50 rounded-2xl p-4 text-xs font-bold text-gray-700 bg-orange-50/30 focus:border-orange-500 focus:ring-0">
-                        </div>
-                        <div>
-                            <label class="block text-[10px] font-black text-orange-500 uppercase tracking-[0.2em] mb-3 ml-1 italic">Rentang Akhir</label>
-                            <input type="date" name="end_date" value="{{ request('end_date') }}" class="w-full border-2 border-orange-50 rounded-2xl p-4 text-xs font-bold text-gray-700 bg-orange-50/30 focus:border-orange-500 focus:ring-0">
-                        </div>
-                        <div>
-                            <label class="block text-[10px] font-black text-orange-500 uppercase tracking-[0.2em] mb-3 ml-1 italic">Jenis Perawatan</label>
-                            <select name="jenis_perawatan" class="w-full border-2 border-orange-50 rounded-2xl p-4 text-xs font-bold text-gray-700 bg-orange-50/30 focus:border-orange-500 focus:ring-0 italic appearance-none">
-                                <option value="">Semua Layanan</option>
-                                <option value="Cabut Gigi" {{ request('jenis_perawatan') == 'Cabut Gigi' ? 'selected' : '' }}>Cabut Gigi</option>
-                                <option value="Scaling" {{ request('jenis_perawatan') == 'Scaling' ? 'selected' : '' }}>Scaling</option>
-                                <option value="Tambal Gigi" {{ request('jenis_perawatan') == 'Tambal Gigi' ? 'selected' : '' }}>Tambal Gigi</option>
-                                <option value="Check Up" {{ request('jenis_perawatan') == 'Check Up' ? 'selected' : '' }}>Check Up</option>
-                            </select>
-                        </div>
-                    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div>
+            <label class="block text-[10px] font-black text-orange-500 uppercase tracking-[0.2em] mb-3 ml-1 italic">Periode Laporan</label>
+            <select name="rentang_hari" class="w-full border-2 border-orange-50 rounded-2xl p-4 text-xs font-bold text-gray-700 bg-orange-50/30 focus:border-orange-500 focus:ring-0 italic uppercase tracking-tighter">
+                <option value="">Semua Waktu (Tampilkan Semua)</option>
+                <option value="1" {{ request('rentang_hari') == '1' ? 'selected' : '' }}>Hari Ini (1 Hari Terakhir)</option>
+                <option value="7" {{ request('rentang_hari') == '7' ? 'selected' : '' }}>7 Hari Terakhir</option>
+                <option value="30" {{ request('rentang_hari') == '30' ? 'selected' : '' }}>30 Hari Terakhir</option>
+                <option value="90" {{ request('rentang_hari') == '90' ? 'selected' : '' }}>3 Bulan Terakhir (90 Hari)</option>
+                <option value="365" {{ request('rentang_hari') == '365' ? 'selected' : '' }}>1 Tahun Terakhir</option>
+            </select>
+        </div>
 
-                    <div class="flex flex-col md:flex-row gap-4">
-                        <button type="submit" class="flex-1 inline-flex items-center justify-center px-8 py-4 bg-gray-900 hover:bg-black text-white text-[11px] font-black rounded-2xl transition-all shadow-xl shadow-gray-200 uppercase tracking-widest active:scale-95 italic">
-                            Terapkan Filter Data
-                        </button>
-                        
-                        <a href="{{ route('reports.pdf', request()->query()) }}" class="flex-1 inline-flex items-center justify-center px-8 py-4 bg-red-600 hover:bg-red-700 text-white text-[11px] font-black rounded-2xl transition-all shadow-xl shadow-red-100 uppercase tracking-widest active:scale-95 italic">
-                            Export PDF Laporan
-                        </a>
+        <div>
+            <label class="block text-[10px] font-black text-orange-500 uppercase tracking-[0.2em] mb-3 ml-1 italic">Jenis Perawatan</label>
+            <select name="jenis_perawatan" class="w-full border-2 border-orange-50 rounded-2xl p-4 text-xs font-bold text-gray-700 bg-orange-50/30 focus:border-orange-500 focus:ring-0 italic uppercase tracking-tighter">
+                <option value="">Semua Layanan</option>
+                <option value="Check Up" {{ request('jenis_perawatan') == 'Check Up' ? 'selected' : '' }}>Check Up</option>
+                <option value="Scalling" {{ request('jenis_perawatan') == 'Scalling' ? 'selected' : '' }}>Scalling</option>
+                <option value="Tambal Gigi" {{ request('jenis_perawatan') == 'Tambal Gigi' ? 'selected' : '' }}>Tambal Gigi</option>
+                <option value="Cabut Gigi" {{ request('jenis_perawatan') == 'Cabut Gigi' ? 'selected' : '' }}>Cabut Gigi</option>
+                <option value="Perawatan Saluran Akar" {{ request('jenis_perawatan') == 'Perawatan Saluran Akar' ? 'selected' : '' }}>Perawatan Saluran Akar</option>
+                <option value="Pasang Behel" {{ request('jenis_perawatan') == 'Pasang Behel' ? 'selected' : '' }}>Pasang Behel</option>
+                <option value="Veneer Gigi" {{ request('jenis_perawatan') == 'Veneer Gigi' ? 'selected' : '' }}>Veneer Gigi</option>
+                <option value="Bleaching Gigi" {{ request('jenis_perawatan') == 'Bleaching Gigi' ? 'selected' : '' }}>Bleaching Gigi</option>
+                <option value="Implan Gigi" {{ request('jenis_perawatan') == 'Implan Gigi' ? 'selected' : '' }}>Implan Gigi</option>
+                <option value="Perawatan Gusi" {{ request('jenis_perawatan') == 'Perawatan Gusi' ? 'selected' : '' }}>Perawatan Gusi</option>
+            </select>
+        </div>
+    </div>
 
-                        <a href="{{ route('reports.index') }}" class="md:w-16 flex items-center justify-center p-4 bg-orange-100 text-orange-600 rounded-2xl hover:bg-orange-200 transition-all">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
-                        </a>
-                    </div>
-                </form>
+    <div class="flex flex-col md:flex-row gap-4">
+        <button type="submit" class="flex-1 inline-flex items-center justify-center px-8 py-4 bg-gray-900 hover:bg-black text-white text-[11px] font-black rounded-2xl transition-all shadow-xl shadow-gray-200 uppercase tracking-widest active:scale-95 italic">
+            Terapkan Filter Data
+        </button>
+        
+        <a href="{{ route('reports.pdf', request()->query()) }}" class="flex-1 inline-flex items-center justify-center px-8 py-4 bg-red-600 hover:bg-red-700 text-white text-[11px] font-black rounded-2xl transition-all shadow-xl shadow-red-100 uppercase tracking-widest active:scale-95 italic">
+            Export PDF Laporan
+        </a>
+
+        <a href="{{ route('reports.index') }}" class="md:w-16 flex items-center justify-center p-4 bg-orange-100 text-orange-600 rounded-2xl hover:bg-orange-200 transition-all">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+        </a>
+    </div>
+</form>
             </div>
 
             <div class="bg-white overflow-hidden shadow-2xl sm:rounded-[2.5rem] border border-orange-100 p-8">

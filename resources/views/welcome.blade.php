@@ -50,12 +50,7 @@
                 <p class="text-gray-500 font-medium text-lg max-w-md leading-relaxed mb-10 italic">
                     Pelayanan kesehatan gigi profesional dengan teknologi modern untuk warga Indramayu. Booking antrean jadi lebih mudah dan cepat.
                 </p>
-                <div class="flex flex-wrap gap-4">
-                    <a href="{{ route('register') }}" class="px-8 py-4 bg-orange-500 text-white font-black rounded-2xl shadow-2xl shadow-orange-200 hover:bg-orange-600 transition-all flex items-center gap-3 group italic text-sm tracking-widest uppercase">
-                        Reservasi Online Sekarang 
-                        <span class="group-hover:translate-x-1 transition-transform"></span>
-                    </a>
-                </div>
+
             </div>
 
             <div class="relative">

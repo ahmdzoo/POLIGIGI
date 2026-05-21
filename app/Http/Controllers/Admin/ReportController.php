@@ -9,21 +9,27 @@ use Barryvdh\DomPDF\Facade\Pdf; // Import library PDF
 
 class ReportController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // Menampilkan semua pendaftaran untuk Admin
-        $registrations = Registration::with(['user', 'schedule.doctor'])->latest()->get();
-        return view('admin.reports.index', compact('registrations'));
-    }
+        $query = Registration::with('user', 'schedule.doctor');
 
-    public function downloadPdf()
-    {
-        $registrations = Registration::with(['user', 'schedule.doctor'])->get();
-        
-        // Memanggil view khusus untuk format PDF
-        $pdf = Pdf::loadView('admin.reports.pdf', compact('registrations'));
-        
-        // Download file dengan nama tertentu
-        return $pdf->download('laporan-pendaftaran-poligigi.pdf');
+        // 1. Filter Berdasarkan Rentang Hari Konsep Baru
+        if ($request->filled('rentang_hari')) {
+            $hari = intval($request->rentang_hari);
+            $tanggalBatas = Carbon::now()->subDays($hari)->toDateString();
+            
+            $query->whereDate('tgl_pendaftaran', '>=', $tanggalBatas);
+        }
+
+        // 2. Filter Berdasarkan Jenis Perawatan (10 Layanan)
+        if ($request->filled('jenis_perawatan')) {
+            $query->where('jenis_perawatan', $request->jenis_perawatan);
+        }
+
+        // FIX: Ubah nama variabel dari $reports menjadi $registrations agar sesuai dengan View Anda
+        $registrations = $query->latest('tgl_pendaftaran')->get();
+
+        // Mengirimkan variabel $registrations ke halaman View Laporan
+        return view('admin.reports.index', compact('registrations'));
     }
 }
