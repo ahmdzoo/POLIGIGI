@@ -28,8 +28,8 @@ class DatabaseSeeder extends Seeder
         // Buat Akun Pasien (Opsional untuk testing)
         User::create([
             'nik' => '3212000000000001',
-            'name' => 'Hadi Haris Kiyandi',
-            'email' => 'hadi@gmail.com',
+            'name' => 'Nabila',
+            'email' => 'Nabila@gmail.com',
             'password' => Hash::make('password123'),
             'role' => 'pasien',
         ]);

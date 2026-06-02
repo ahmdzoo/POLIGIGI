@@ -14,13 +14,17 @@
                     <h3 class="text-3xl font-black text-white italic">{{ $registrations->count() }} <span class="text-xs uppercase font-bold">Pasien</span></h3>
                 </div>
                 
-                <div class="bg-white p-6 rounded-[2rem] shadow-xl border border-orange-100">
-                    <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1 italic">Update Terakhir</p>
-                    <h3 class="text-2xl font-black text-orange-600 italic">
-                        {{ $registrations->max('created_at') ? $registrations->max('created_at')->format('H:i') : '--:--' }} 
-                        <span class="text-xs text-gray-400 uppercase font-bold text-gray-300">WIB</span>
-                    </h3>
-                </div>
+               <div class="bg-white p-6 rounded-[2rem] shadow-xl border border-orange-100">
+    <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1 italic">Update Terakhir</p>
+    <h3 class="text-xl font-black text-orange-600 italic uppercase">
+        @if($registrations->max('tgl_pendaftaran'))
+            {{ \Carbon\Carbon::parse($registrations->max('tgl_pendaftaran'))->translatedFormat('d F Y') }}
+        @else
+            -- -- ----
+        @endif
+        {{-- Teks WIB sudah dihapus total dari sini --}}
+    </h3>
+</div>
 
                 <div class="bg-white p-6 rounded-[2rem] shadow-xl border border-orange-100">
                     <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1 italic">Layanan Terpopuler</p>
