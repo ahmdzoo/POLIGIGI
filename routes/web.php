@@ -9,7 +9,20 @@ use App\Http\Controllers\ChatController;
 use App\Models\Article;
 use App\Http\Controllers\Admin\ArticleController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Artisan; // Di-import untuk eksekusi perintah terminal
 use App\Http\Controllers\Admin\PatientController;
+
+// ROUTE TEMPORARY UNTUK PERBAIKAN SYMLINK GAMBAR DI HOSTING
+Route::get('/generate-symlink', function () {
+    // Menghapus symlink lama jika ada yang rusak
+    if (is_link(public_path('storage'))) {
+        app('files')->delete(public_path('storage'));
+    }
+
+    // Membuat symlink baru di server produksi
+    Artisan::call('storage:link');
+    return 'Storage link sukses dibuat! Silakan cek kembali gambar artikel Anda.';
+});
 
 Route::get('/', function () {
     return view('welcome');
@@ -32,7 +45,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         return view('admin.dashboard');
     })->name('admin.dashboard');
 
-    // 2. Tambahkan baris ini di dalam grup admin
+    // Resource Route untuk Kelola Dokter
     Route::resource('admin/doctors', DoctorController::class)->names([
         'index' => 'doctors.index',
         'create' => 'doctors.create',
@@ -41,21 +54,22 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         'update' => 'doctors.update',
         'destroy' => 'doctors.destroy',
     ]);
-    
+
     Route::resource('admin/schedules', ScheduleController::class)->names('schedules');
     Route::resource('admin/articles', ArticleController::class)->names('articles');
     Route::get('/admin/reports', [ReportController::class, 'index'])->name('reports.index');
-    Route::get('/admin/reports/pdf', [ReportController::class, 'downloadPdf'])->name('reports.pdf');
+
+    // MENYESUAIKAN DENGAN KODE CONTROLLER BARU: downloadPdf -> exportPdf
+    Route::get('/admin/reports/pdf', [ReportController::class, 'exportPdf'])->name('reports.pdf');
+
     Route::get('/admin/patients', [PatientController::class, 'index'])->name('patients.index');
     Route::patch('/admin/registrations/{id}/status', [RegistrationController::class, 'updateStatus'])->name('registrations.updateStatus');
-    
 });
 
 // --- KELOMPOK ROUTE PASIEN ---
-// Di dalam grup role:pasien
 Route::middleware(['auth', 'role:pasien'])->group(function () {
     Route::get('/pasien/dashboard', function () {
-        return view('dashboard'); // Sementara pakai dashboard default
+        return view('dashboard');
     })->name('pasien.dashboard');
 
     // Route Pendaftaran
@@ -76,7 +90,7 @@ Route::middleware(['auth'])->group(function () {
 });
 
 // Route untuk melihat detail artikel (bisa diakses Pasien & Admin)
-Route::get('/articles/{id}', [App\Http\Controllers\Admin\ArticleController::class, 'show'])->name('articles.show');
+Route::get('/articles/{id}', [ArticleController::class, 'show'])->name('articles.show');
 
 Route::post('/articles/{article}/favorite', [ArticleController::class, 'toggleFavorite'])->name('articles.favorite');
 
