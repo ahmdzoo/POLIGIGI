@@ -132,7 +132,7 @@
             </div>
             <div class="pt-8 border-t border-orange-50 text-center">
                 <p class="text-gray-400 text-[9px] font-black uppercase tracking-widest italic">
-                    © {{ date('Y') }} Klinik Gigi Paoman. Dikelola oleh Hadi Haris Kiyandi.
+                    © {{ date('Y') }} Klinik Gigi Paoman, 2026.
                 </p>
             </div>
         </div>
